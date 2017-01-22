@@ -1,20 +1,18 @@
-# Anbot - Web Crawler
+# Anbot - Pâtisserie
 
 Author : Jimmy
+Description : Web Crawler - Browse the various job websites and collect the data.
+Creation Date : 16 december, 2016
 
 == TO DO LIST ==
-
    - WebServer
    - WebSocket
 
 
 == TO DO LIST SECONDARY ==
+ - Replace inputs HTML with toggles.
 
- - Remplacer les inputs pour des toggles.
 
+== MEMO COMPILATION ==
 
-== COMPILATION ==
-
-g++ *.cpp *.hpp -o main -lcurl `pkg-config --cflags --libs gumbo`
-
-g++ webSocket.cc -o websocket -I/net/cremi/jimgouraud/espaces/travail/libnavajo/include -pthread -L/net/cremi/jimgouraud/espaces/travail/libnavajo/lib/ -lnavajo
+g++ webSocket.cc -o websocket -I~/espaces/travail/libnavajo/include -pthread -L~/espaces/travail/libnavajo/lib/ -lnavajo
