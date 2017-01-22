@@ -1,0 +1,57 @@
+
+body {
+    line-height: 1.52;
+    color: #717f86;
+    font-size: 15px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+}
+
+/***********************************
+Offers
+************************************/
+h4 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 17px;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+img {
+    width: 40%;
+    height: 40%;
+}
+
+.even {
+    background-color: rgb(247, 247, 247);
+}
+
+a:link{ 
+    text-decoration:none; 
+} 
+
+.box-offer{
+    background-color: #fff;
+    padding: 10px 20px;
+    box-shadow: 0px 0px 1px 1px rgba(0,0,0,0.1);
+    height: 180px;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.box-offer:hover{
+    background-color: rgba(30,144,255,0.1);
+}
+
+.offer_company, .offer_location{
+    color: #8a8a8d;
+    line-height: 24px;
+}
+
+.offer_description{
+    color:black;
+}
