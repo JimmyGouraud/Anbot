@@ -75,14 +75,14 @@ string Offer::get_date (void)
   return this->date;
 }
 
-string Offer::get_type (int pos)
+string Offer::get_type (unsigned pos)
 {
   return this->types[pos];
 }
 
 
 
-int Offer::get_nb_type (void)
+unsigned Offer::get_nb_type (void)
 {
   return this->types.size();
 }
@@ -92,7 +92,7 @@ void Offer::display(void)
 {
   cout << " Title       -> " << this->title << endl;
   cout << " Type        -> ";
-  for (int i = 0; i < this->types.size(); i++)
+  for (unsigned i = 0; i < this->types.size(); i++)
   {
     cout << this->types[i];
     if (i != this->types.size() - 1)

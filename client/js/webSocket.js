@@ -1,5 +1,6 @@
 
-var adressServer = "ws://jimmy.gouraud.emi.u-bordeaux.fr/server/";
+var adressServer = "ws://jimmy.gouraud.emi.u-bordeaux.fr/";
+
 var output;
 
 function init()

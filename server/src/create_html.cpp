@@ -4,7 +4,7 @@
 string indent(int nb_indent)
 {
   string indentation;
-  for (int i = 0; i < nb_indent; i++)
+  for (unsigned i = 0; i < (unsigned)nb_indent; i++)
   {
     indentation += "  ";
   }
@@ -19,7 +19,7 @@ void generate_html (std::vector<Website *> * tab_website)
   int num_website = 0;
   string parity;
   
-  for (int i = 0; i < tab_website->size(); i++)
+  for (unsigned i = 0; i < tab_website->size(); i++)
   {
     num_website++;
     parity = num_website%2 == 0?"even":"odd";
@@ -44,7 +44,7 @@ void generate_html_website (Website * website)
   generate_html_title(website->get_website(), website->get_nb_offers());
 
   file << indent(5) << "<div class=\"row feature-info\">" << endl;
-  for (int i = 0; i < website->get_nb_offers(); i++)
+  for (unsigned i = 0; i < website->get_nb_offers(); i++)
   {
     generate_html_offer(website->get_offer(i), i+1);
   }
@@ -69,7 +69,7 @@ string get_src_img(string title)
   return "";
 }
 
-void generate_html_title (string title, int nb_offers)
+void generate_html_title (string title, unsigned nb_offers)
 {
   ofstream file("offers.php", ios::app);
 
@@ -85,7 +85,7 @@ void generate_html_title (string title, int nb_offers)
 string display_class_types (Offer * offer)
 {
   string types;
-  for (int i = 0; i < offer->get_nb_type(); i++)
+  for (unsigned i = 0; i < offer->get_nb_type(); i++)
   {
     types.append(offer->get_type(i));
     if (i != offer->get_nb_type() - 1)
@@ -136,7 +136,7 @@ string convert_type (string type)
 string display_types (Offer * offer)
 {
   string types;
-  for (int i = 0; i < offer->get_nb_type(); i++)
+  for (unsigned i = 0; i < offer->get_nb_type(); i++)
   {
     types.append(convert_type(offer->get_type(i)));
     if (i != (offer->get_nb_type() - 1))
@@ -172,7 +172,7 @@ void generate_html_informations (Offer * offer)
   file << indent(10) << "</div>" << endl;
 }
 
-void generate_html_offer(Offer * offer, int num_offer)
+void generate_html_offer(Offer * offer, unsigned num_offer)
 {
   ofstream file("offers.php", ios::app);
 

@@ -25,9 +25,9 @@ class Offer
   string get_description (void);
   string get_url (void);
   string get_date (void);
-  string get_type (int pos);
+  string get_type (unsigned pos);
 
-  int get_nb_type ();
+  unsigned get_nb_type ();
   void display(void);
   
  private:

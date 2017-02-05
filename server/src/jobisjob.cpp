@@ -48,7 +48,7 @@ void Jobisjob::extract_offers (GumboNode * node)
     if (strstr(attributes1->value, "offer") != NULL &&
         strstr(attributes2->value, "box_offer") != NULL)
     {
-      int num_offer = add_offer();
+      unsigned num_offer = add_offer();
       extract_informations(node, num_offer);
       
       string title = this->tab_offer[num_offer]->get_title();
@@ -69,7 +69,7 @@ void Jobisjob::extract_offers (GumboNode * node)
 }
 
 
-void Jobisjob::extract_informations (GumboNode * node, int num_offer)
+void Jobisjob::extract_informations (GumboNode * node, unsigned num_offer)
 {
   if (node->type != GUMBO_NODE_ELEMENT)
   {
@@ -84,14 +84,14 @@ void Jobisjob::extract_informations (GumboNode * node, int num_offer)
   extract_date(node, num_offer);
 
   GumboVector * children = &node->v.element.children;
-  for (unsigned int i = 0; i < children->length; i++)
+  for (unsigned i = 0; i < children->length; i++)
   {
     extract_informations(static_cast<GumboNode*>(children->data[i]), num_offer);
   }
 }
 
 
-void Jobisjob::extract_title_and_url (GumboNode * node, int num_offer)
+void Jobisjob::extract_title_and_url (GumboNode * node, unsigned num_offer)
 {
   GumboAttribute * attributes;
 
@@ -105,7 +105,7 @@ void Jobisjob::extract_title_and_url (GumboNode * node, int num_offer)
       if (child->v.text.text != NULL )
       {
         string text = child->v.text.text;
-        for (int i = 0; i < text.length(); i++)
+        for (unsigned i = 0; i < text.length(); i++)
         {
           if (text[i] == '\n')
           {
@@ -122,7 +122,7 @@ void Jobisjob::extract_title_and_url (GumboNode * node, int num_offer)
 }
 
 
-void Jobisjob::extract_company (GumboNode * node, int num_offer)
+void Jobisjob::extract_company (GumboNode * node, unsigned num_offer)
 {
   GumboAttribute * attributes1;
   GumboAttribute * attributes2;
@@ -141,7 +141,7 @@ void Jobisjob::extract_company (GumboNode * node, int num_offer)
       if (child->v.text.text != NULL )
       {
         string company = child->v.text.text;
-        for (int i = 0; i < company.length(); i++)
+        for (unsigned i = 0; i < company.length(); i++)
         {
           if (company[i] == '\n')
           {
@@ -154,7 +154,7 @@ void Jobisjob::extract_company (GumboNode * node, int num_offer)
   }
 }
 
-void Jobisjob::extract_description (GumboNode * node, int num_offer)
+void Jobisjob::extract_description (GumboNode * node, unsigned num_offer)
 {
   GumboAttribute * attributes1;
   GumboAttribute * attributes2;  
@@ -172,7 +172,7 @@ void Jobisjob::extract_description (GumboNode * node, int num_offer)
       if (child->v.text.text != NULL )
       {
         string description = child->v.text.text;
-        for (int i = 0; i < description.length(); i++)
+        for (unsigned i = 0; i < description.length(); i++)
         {
           if (description[i] == '\n')
           {
@@ -186,7 +186,7 @@ void Jobisjob::extract_description (GumboNode * node, int num_offer)
 }
 
 
-void Jobisjob::extract_location (GumboNode * node, int num_offer)
+void Jobisjob::extract_location (GumboNode * node, unsigned num_offer)
 {
   GumboAttribute * attributes1;
   GumboAttribute * attributes2;  
@@ -204,7 +204,7 @@ void Jobisjob::extract_location (GumboNode * node, int num_offer)
       if (child->v.text.text != NULL )
       {
         string location = child->v.text.text;
-        for (int i = 0; i < location.length(); i++)
+        for (unsigned i = 0; i < location.length(); i++)
         {
           if (location[i] == '\n')
           {
@@ -289,7 +289,7 @@ string Jobisjob::convert_type (string type)
   return type;
 }
 
-void Jobisjob::extract_type (GumboNode * node, int num_offer)
+void Jobisjob::extract_type (GumboNode * node, unsigned num_offer)
 {
   std::size_t pos = this->current_url.find_last_of("=");
   string type = this->current_url.substr(pos+1);
@@ -305,10 +305,10 @@ void Jobisjob::extract_type (GumboNode * node, int num_offer)
       types.push_back(type);
     }
 
-  for (int i = 0; i < types.size(); i++)
+  for (unsigned i = 0; i < types.size(); i++)
     {
       type = types[i];
-      for (int j = 0; j < type.size(); j++)
+      for (unsigned j = 0; j < type.size(); j++)
 	{
 	  if (type[j] == '+')
 	    {
@@ -323,14 +323,14 @@ void Jobisjob::extract_type (GumboNode * node, int num_offer)
       types[i] = type;
     }
 
-  for (int i = 0; i < types.size(); i++)
+  for (unsigned i = 0; i < types.size(); i++)
     {
       types[i] = convert_type(types[i]);
     }
 
-  for (int i = 0; i < tab_offer[num_offer]->get_nb_type(); i++)
+  for (unsigned i = 0; i < tab_offer[num_offer]->get_nb_type(); i++)
     {
-      for (int j = 0; j < types.size(); j++)
+      for (unsigned j = 0; j < types.size(); j++)
 	{
 	  if (strstr(tab_offer[num_offer]->get_type(i).c_str(), types[j].c_str()) != NULL)
 	    {
@@ -339,14 +339,14 @@ void Jobisjob::extract_type (GumboNode * node, int num_offer)
 	}
     }
 
-  for (int i = 0; i < types.size(); i++)
+  for (unsigned i = 0; i < types.size(); i++)
     {
       tab_offer[num_offer]->add_type(types[i]);
     }
 }
 
 
-void Jobisjob::extract_date (GumboNode * node, int num_offer)
+void Jobisjob::extract_date (GumboNode * node, unsigned num_offer)
 {
   GumboAttribute * attributes1;
   GumboAttribute * attributes2;
@@ -361,7 +361,7 @@ void Jobisjob::extract_date (GumboNode * node, int num_offer)
 	  GumboVector * children = &node->v.element.children;
 	  string date;
 
-	  for (unsigned int i = 0; i < children->length; i++)
+	  for (unsigned i = 0; i < children->length; i++)
 	    {
 	      GumboNode * child = static_cast<GumboNode*>(node->v.element.children.data[i]);
 	      if (child->type == GUMBO_NODE_ELEMENT)

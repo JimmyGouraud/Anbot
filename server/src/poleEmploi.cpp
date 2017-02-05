@@ -42,7 +42,7 @@ void PoleEmploi::extract_offers (GumboNode * node)
         strstr(attributes2->value, "pertinence") != NULL &&
         strstr(attributes3->value, "http://schema.org/JobPosting") != NULL)
     {
-      int num_offer = add_offer();
+      unsigned num_offer = add_offer();
       extract_informations(node->parent->parent, num_offer);
       if (strstr(tab_offer[num_offer]->get_type(0).c_str(), "Reprise entreprise") != NULL)
       {
@@ -52,7 +52,7 @@ void PoleEmploi::extract_offers (GumboNode * node)
   }
 }
 
-void PoleEmploi::extract_informations (GumboNode * node, int num_offer)
+void PoleEmploi::extract_informations (GumboNode * node, unsigned num_offer)
 {
   if (node->type != GUMBO_NODE_ELEMENT)
   {
@@ -67,14 +67,14 @@ void PoleEmploi::extract_informations (GumboNode * node, int num_offer)
   extract_date(node, num_offer);
 
   GumboVector * children = &node->v.element.children;
-  for (unsigned int i = 0; i < children->length; i++)
+  for (unsigned i = 0; i < children->length; i++)
   {
     extract_informations(static_cast<GumboNode*>(children->data[i]), num_offer);
   }
 }
 
 
-void PoleEmploi::extract_title_and_url (GumboNode * node, int num_offer)
+void PoleEmploi::extract_title_and_url (GumboNode * node, unsigned num_offer)
 {
   GumboAttribute * attributes;
   
@@ -88,7 +88,7 @@ void PoleEmploi::extract_title_and_url (GumboNode * node, int num_offer)
       if (child != NULL && child->v.text.text != NULL )
       {
         string text = child->v.text.text;
-        for (int i = 0; i < text.length(); i++)
+        for (unsigned i = 0; i < text.length(); i++)
         {
           if (text[i] == '\n')
           {
@@ -98,7 +98,7 @@ void PoleEmploi::extract_title_and_url (GumboNode * node, int num_offer)
         tab_offer[num_offer]->set_title(text);
       }
       
-      if (attributes = gumbo_get_attribute(&node->v.element.attributes, "href"))
+      if ((attributes = gumbo_get_attribute(&node->v.element.attributes, "href")))
       {
         string url = "http://" + this->website + attributes->value;
         tab_offer[num_offer]->set_url(url);
@@ -108,7 +108,7 @@ void PoleEmploi::extract_title_and_url (GumboNode * node, int num_offer)
 }
 
 
-void PoleEmploi::extract_company (GumboNode * node, int num_offer)
+void PoleEmploi::extract_company (GumboNode * node, unsigned num_offer)
 {
   GumboAttribute * attributes1;
   GumboAttribute * attributes2;  
@@ -127,7 +127,7 @@ void PoleEmploi::extract_company (GumboNode * node, int num_offer)
       if (child != NULL && child->v.text.text != NULL)
       {
         string company = child->v.text.text;
-        for (int i = 0; i < company.length(); i++)
+        for (unsigned i = 0; i < company.length(); i++)
         {
           if (company[i] == '\n')
           {
@@ -141,7 +141,7 @@ void PoleEmploi::extract_company (GumboNode * node, int num_offer)
 }
 
 
-void PoleEmploi::extract_location (GumboNode * node, int num_offer)
+void PoleEmploi::extract_location (GumboNode * node, unsigned num_offer)
 {
   GumboAttribute * attributes1;
   GumboAttribute * attributes2;  
@@ -159,7 +159,7 @@ void PoleEmploi::extract_location (GumboNode * node, int num_offer)
       if (child != NULL && child->v.text.text != NULL )
       {
         string location = child->v.text.text;
-        for (int i = 0; i < location.length(); i++)
+        for (unsigned i = 0; i < location.length(); i++)
         {
           if (location[i] == '\n')
           {
@@ -173,7 +173,7 @@ void PoleEmploi::extract_location (GumboNode * node, int num_offer)
 }
 
 
-void PoleEmploi::extract_description (GumboNode * node, int num_offer)
+void PoleEmploi::extract_description (GumboNode * node, unsigned num_offer)
 {
   GumboAttribute * attributes;
   
@@ -187,7 +187,7 @@ void PoleEmploi::extract_description (GumboNode * node, int num_offer)
       if (child != NULL && child->v.text.text != NULL )
       {
         string description = child->v.text.text;
-        for (int i = 0; i < description.length(); i++)
+        for (unsigned i = 0; i < description.length(); i++)
         {
           if (description[i] == '\n')
           {
@@ -218,8 +218,8 @@ string PoleEmploi::create_cookie ()
     string tmp;
     if (num_line > 3)
     {
-      int cpt = 0;
-      for (int i = 0; i < line.length(); i++){
+      unsigned cpt = 0;
+      for (unsigned i = 0; i < line.length(); i++){
         if (line[i] == '\t')
         {
           cpt++;
@@ -250,10 +250,10 @@ void PoleEmploi::run ()
   tab_url.push_back(tab_url[0]);
   
   GumboOutput * output;
-  int initial_size = tab_url.size();
+  unsigned initial_size = tab_url.size();
   bool research_others_pages = true;
   
-  for (int i = 0; i < tab_url.size(); i++)
+  for (unsigned i = 0; i < tab_url.size(); i++)
     {
       if (i > initial_size)
 	{
@@ -329,7 +329,7 @@ int PoleEmploi::initialize_curl (const char* url)
   return 0;
 }
 
-void PoleEmploi::extract_type (GumboNode * node, int num_offer)
+void PoleEmploi::extract_type (GumboNode * node, unsigned num_offer)
 {
   GumboAttribute * attributes1;
   GumboAttribute * attributes2;  
@@ -347,7 +347,7 @@ void PoleEmploi::extract_type (GumboNode * node, int num_offer)
 	  if (child != NULL && child->v.text.text != NULL )
 	    {
 	      string type = child->v.text.text;
-	      for (int i = 0; i < type.length(); i++)
+	      for (unsigned i = 0; i < type.length(); i++)
 		{
 		  if (type[i] == '\n')
 		    {
@@ -360,7 +360,7 @@ void PoleEmploi::extract_type (GumboNode * node, int num_offer)
     }
 }
 
-void PoleEmploi::extract_date (GumboNode * node, int num_offer)
+void PoleEmploi::extract_date (GumboNode * node, unsigned num_offer)
 {
   GumboAttribute * attributes1;
   GumboAttribute * attributes2;
@@ -375,7 +375,7 @@ void PoleEmploi::extract_date (GumboNode * node, int num_offer)
 	  GumboVector * children = &node->v.element.children;
 	  string date;
 
-	  for (unsigned int i = 0; i < children->length; i++)
+	  for (unsigned i = 0; i < children->length; i++)
 	    {
 	      GumboNode * child = static_cast<GumboNode*>(node->v.element.children.data[i]);
 	      if (child->type == GUMBO_NODE_ELEMENT)

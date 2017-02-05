@@ -45,11 +45,11 @@ void Indeed::extract_offers (GumboNode * node)
   {
     if (strstr(attributes->value, "organicJob") != NULL)
     {
-      int num_offer = add_offer();
+      unsigned num_offer = add_offer();
       extract_informations(node, num_offer);
 
       int tmp_num_offer = find_offer(tab_offer[num_offer]->get_url());
-      if (tmp_num_offer != num_offer && tmp_num_offer != -1)
+      if (tmp_num_offer != (int)num_offer && tmp_num_offer != -1)
       {
         tab_offer[tmp_num_offer]->add_type(tab_offer[num_offer]->get_type(0));
         tab_offer.pop_back();
@@ -59,7 +59,7 @@ void Indeed::extract_offers (GumboNode * node)
 }
 
 
-void Indeed::extract_informations (GumboNode * node, int num_offer)
+void Indeed::extract_informations (GumboNode * node, unsigned num_offer)
 {
   if (node->type != GUMBO_NODE_ELEMENT)
   {
@@ -74,14 +74,14 @@ void Indeed::extract_informations (GumboNode * node, int num_offer)
   extract_date (node, num_offer);
   
   GumboVector * children = &node->v.element.children;
-  for (unsigned int i = 0; i < children->length; i++)
+  for (unsigned i = 0; i < children->length; i++)
   {
     extract_informations(static_cast<GumboNode*>(children->data[i]), num_offer);
   }
 }
 
 
-void Indeed::extract_company (GumboNode *node, int num_offer)
+void Indeed::extract_company (GumboNode *node, unsigned num_offer)
 {
   GumboAttribute * attributes1;
   GumboAttribute * attributes2;
@@ -99,7 +99,7 @@ void Indeed::extract_company (GumboNode *node, int num_offer)
       if (child->v.text.text != NULL )
       {
         string text = child->v.text.text;
-        for (int i = 0; i < text.length(); i++)
+        for (unsigned i = 0; i < text.length(); i++)
         {
           if (text[i] == '\n' || text[i] == '\t')
           {
@@ -110,7 +110,7 @@ void Indeed::extract_company (GumboNode *node, int num_offer)
       }
             
       GumboVector * children = &node->v.element.children;
-      for (unsigned int i = 0; i < children->length; i++)
+      for (unsigned i = 0; i < children->length; i++)
       {
         child = static_cast<GumboNode*>(children->data[i]);
         if (child->type == GUMBO_NODE_ELEMENT &&
@@ -120,7 +120,7 @@ void Indeed::extract_company (GumboNode *node, int num_offer)
           if (child2->v.text.text != NULL )
           {
             string text = child2->v.text.text;
-            for (int i = 0; i < text.length(); i++)
+            for (unsigned i = 0; i < text.length(); i++)
             {
               if (text[i] == '\n' || text[i] == '\t')
               {
@@ -137,7 +137,7 @@ void Indeed::extract_company (GumboNode *node, int num_offer)
 
 
 
-void Indeed::extract_title_and_url (GumboNode *node, int num_offer)
+void Indeed::extract_title_and_url (GumboNode *node, unsigned num_offer)
 {
   GumboAttribute * attributes;
 
@@ -145,12 +145,12 @@ void Indeed::extract_title_and_url (GumboNode *node, int num_offer)
   {
     if (strstr(attributes->value, "jobTitle") != NULL)
     {
-      if (attributes = gumbo_get_attribute(&node->v.element.attributes, "title"))
+      if ((attributes = gumbo_get_attribute(&node->v.element.attributes, "title")))
       {
         tab_offer[num_offer]->set_title(attributes->value);
       }
       
-      if (attributes = gumbo_get_attribute(&node->v.element.attributes, "href"))
+      if ((attributes = gumbo_get_attribute(&node->v.element.attributes, "href")))
       {
         string url = "http://" + this->website + attributes->value;
         tab_offer[num_offer]->set_url(url);
@@ -159,7 +159,7 @@ void Indeed::extract_title_and_url (GumboNode *node, int num_offer)
   }
 }
 
-void Indeed::extract_description (GumboNode *node, int num_offer)
+void Indeed::extract_description (GumboNode *node, unsigned num_offer)
 {
   GumboAttribute * attributes1;
   GumboAttribute * attributes2;
@@ -174,7 +174,7 @@ void Indeed::extract_description (GumboNode *node, int num_offer)
       GumboVector * children = &node->v.element.children;
       string description;
 
-      for (unsigned int i = 0; i < children->length; i++)
+      for (unsigned i = 0; i < children->length; i++)
       {
         GumboNode * child = static_cast<GumboNode*>(node->v.element.children.data[i]);
         if (child->type == GUMBO_NODE_ELEMENT)
@@ -189,7 +189,7 @@ void Indeed::extract_description (GumboNode *node, int num_offer)
   }
 }
 
-void Indeed::extract_location (GumboNode *node, int num_offer)
+void Indeed::extract_location (GumboNode *node, unsigned num_offer)
 {
   GumboAttribute * attributes;
 
@@ -207,12 +207,12 @@ void Indeed::extract_location (GumboNode *node, int num_offer)
     }
 }
 
-void Indeed::extract_type (GumboNode * node, int num_offer)
+void Indeed::extract_type (GumboNode * node, unsigned num_offer)
 {
   std::size_t pos = this->current_url.find_last_of("=");
   string type = this->current_url.substr(pos+1);
 
-  for (int i = 0; i < tab_offer[num_offer]->get_nb_type(); i++)
+  for (unsigned i = 0; i < tab_offer[num_offer]->get_nb_type(); i++)
   {
     if (strstr(tab_offer[num_offer]->get_type(i).c_str(), type.c_str()) != NULL)
     {
@@ -225,7 +225,7 @@ void Indeed::extract_type (GumboNode * node, int num_offer)
 
 
 
-void Indeed::extract_date (GumboNode *node, int num_offer)
+void Indeed::extract_date (GumboNode *node, unsigned num_offer)
 {
   GumboAttribute * attributes1;
   GumboAttribute * attributes2;
@@ -241,7 +241,7 @@ void Indeed::extract_date (GumboNode *node, int num_offer)
       GumboVector * children = &node->v.element.children;
       string date;
 
-      for (unsigned int i = 0; i < children->length; i++)
+      for (unsigned i = 0; i < children->length; i++)
       {
         GumboNode * child = static_cast<GumboNode*>(node->v.element.children.data[i]);
         if (child->type == GUMBO_NODE_ELEMENT)

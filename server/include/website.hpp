@@ -13,7 +13,7 @@
 class Website
 {
  public:
-  ~Website ();
+  virtual ~Website ();
   
   string website;  // the website (ex : "www.indeed.fr")
   std::vector<string> tab_url; // Contains URL
@@ -22,9 +22,9 @@ class Website
   string current_url;
   
   string get_website ();
-  Offer * get_offer (int i);
-  int get_nb_offers ();
-  int add_offer();
+  Offer * get_offer (unsigned i);
+  unsigned get_nb_offers ();
+  unsigned add_offer();
   void display_offers ();
   int find_offer(string url);
 
@@ -33,13 +33,13 @@ class Website
   virtual void extract_data (GumboNode * node, bool research_others_pages);
   
   virtual void extract_offers (GumboNode * node) = 0;
-  virtual void extract_informations (GumboNode * node, int num_offer) = 0;
-  virtual void extract_title_and_url (GumboNode * node, int num_offer) = 0;
-  virtual void extract_type (GumboNode * node, int num_offer) = 0;
-  virtual void extract_location (GumboNode * node, int num_offer) = 0;
-  virtual void extract_company (GumboNode * node, int num_offer) = 0;
-  virtual void extract_description (GumboNode * node, int num_offer) = 0;
-  virtual void extract_date (GumboNode * node, int num_offer) = 0;
+  virtual void extract_informations (GumboNode * node, unsigned num_offer) = 0;
+  virtual void extract_title_and_url (GumboNode * node, unsigned num_offer) = 0;
+  virtual void extract_type (GumboNode * node, unsigned num_offer) = 0;
+  virtual void extract_location (GumboNode * node, unsigned num_offer) = 0;
+  virtual void extract_company (GumboNode * node, unsigned num_offer) = 0;
+  virtual void extract_description (GumboNode * node, unsigned num_offer) = 0;
+  virtual void extract_date (GumboNode * node, unsigned num_offer) = 0;
   virtual void extract_pages (GumboNode * node) = 0;
 };
 
@@ -50,13 +50,13 @@ class Indeed : public Website
   Indeed (Research * research);
   
   void extract_offers (GumboNode * node);
-  void extract_informations (GumboNode * node, int num_offer);
-  void extract_title_and_url (GumboNode * node, int num_offer);
-  void extract_type (GumboNode * node, int num_offer);
-  void extract_location (GumboNode * node, int num_offer);
-  void extract_company (GumboNode * node, int num_offer);
-  void extract_description (GumboNode * node, int num_offer);
-  void extract_date (GumboNode * node, int num_offer);
+  void extract_informations (GumboNode * node, unsigned num_offer);
+  void extract_title_and_url (GumboNode * node, unsigned num_offer);
+  void extract_type (GumboNode * node, unsigned num_offer);
+  void extract_location (GumboNode * node, unsigned num_offer);
+  void extract_company (GumboNode * node, unsigned num_offer);
+  void extract_description (GumboNode * node, unsigned num_offer);
+  void extract_date (GumboNode * node, unsigned num_offer);
   void extract_pages (GumboNode * node);
 };
 
@@ -67,13 +67,13 @@ class Jobisjob : public Website
   Jobisjob (Research * research);
 
   void extract_offers (GumboNode * node);
-  void extract_informations (GumboNode * node, int num_offer);
-  void extract_title_and_url (GumboNode * node, int num_offer);
-  void extract_type (GumboNode * node, int num_offer);
-  void extract_location (GumboNode * node, int num_offer);
-  void extract_company (GumboNode * node, int num_offer);
-  void extract_description (GumboNode * node, int num_offer);
-  void extract_date (GumboNode * node, int num_offer);
+  void extract_informations (GumboNode * node, unsigned num_offer);
+  void extract_title_and_url (GumboNode * node, unsigned num_offer);
+  void extract_type (GumboNode * node, unsigned num_offer);
+  void extract_location (GumboNode * node, unsigned num_offer);
+  void extract_company (GumboNode * node, unsigned num_offer);
+  void extract_description (GumboNode * node, unsigned num_offer);
+  void extract_date (GumboNode * node, unsigned num_offer);
   void extract_pages (GumboNode * node);
 
   string convert_type (string type);
@@ -89,13 +89,13 @@ class PoleEmploi : public Website
   void run ();
   
   void extract_offers (GumboNode * node);
-  void extract_informations (GumboNode * node, int num_offer);
-  void extract_title_and_url (GumboNode * node, int num_offer);
-  void extract_type (GumboNode * node, int num_offer);
-  void extract_location (GumboNode * node, int num_offer);
-  void extract_company (GumboNode * node, int num_offer);
-  void extract_description (GumboNode * node, int num_offer);
-  void extract_date (GumboNode * node, int num_offer);
+  void extract_informations (GumboNode * node, unsigned num_offer);
+  void extract_title_and_url (GumboNode * node, unsigned num_offer);
+  void extract_type (GumboNode * node, unsigned num_offer);
+  void extract_location (GumboNode * node, unsigned num_offer);
+  void extract_company (GumboNode * node, unsigned num_offer);
+  void extract_description (GumboNode * node, unsigned num_offer);
+  void extract_date (GumboNode * node, unsigned num_offer);
   void extract_pages (GumboNode * node);
 
  private:

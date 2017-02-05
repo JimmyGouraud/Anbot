@@ -28,7 +28,7 @@ int main (int argc, char *argv[])
 
   init_tab_website(&tab_website, research);
  
-  for (int i = 0; i < tab_website.size(); i++)
+  for (unsigned i = 0; i < tab_website.size(); i++)
   {
     cout << " ===== " << tab_website[i]->get_website() << " ===== " << endl;
     tab_website[i]->run();
@@ -37,7 +37,7 @@ int main (int argc, char *argv[])
   
   generate_html(&tab_website);
 
-  for (int i = 0; i < tab_website.size(); i++)
+  for (unsigned i = 0; i < tab_website.size(); i++)
   {
     delete tab_website[i];
   }

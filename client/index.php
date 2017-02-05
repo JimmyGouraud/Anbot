@@ -101,7 +101,7 @@
     <script src="js/bootstrap.min.js"></script>
     
     <script src="js/sortOffers.js"></script>
-    <script src="js/webSocket.js"></script>
-
+    <!-- <script src="js/webSocket.js"></script> -->
+    <script src="js/test.js"></script>
   </body>
 </html>
