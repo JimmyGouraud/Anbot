@@ -6,6 +6,7 @@
 #include <cstring>
 #include <vector>
 #include <curl/curl.h>
+#include <stdlib.h>
 #include "gumbo.h"
 #include "offer.hpp"
 #include "research.hpp"
@@ -22,7 +23,7 @@ class Website
   string current_url;
   
   string get_website ();
-  Offer * get_offer (unsigned i);
+  Offer* get_offer (unsigned i);
   unsigned get_nb_offers ();
   unsigned add_offer();
   void display_offers ();
@@ -40,6 +41,7 @@ class Website
   virtual void extract_company (GumboNode * node, unsigned num_offer) = 0;
   virtual void extract_description (GumboNode * node, unsigned num_offer) = 0;
   virtual void extract_date (GumboNode * node, unsigned num_offer) = 0;
+  virtual int extract_day(string date) = 0;
   virtual void extract_pages (GumboNode * node) = 0;
 };
 
@@ -57,6 +59,7 @@ class Indeed : public Website
   void extract_company (GumboNode * node, unsigned num_offer);
   void extract_description (GumboNode * node, unsigned num_offer);
   void extract_date (GumboNode * node, unsigned num_offer);
+  int extract_day(string date);
   void extract_pages (GumboNode * node);
 };
 
@@ -74,6 +77,7 @@ class Jobisjob : public Website
   void extract_company (GumboNode * node, unsigned num_offer);
   void extract_description (GumboNode * node, unsigned num_offer);
   void extract_date (GumboNode * node, unsigned num_offer);
+  int extract_day(string date);
   void extract_pages (GumboNode * node);
 
   string convert_type (string type);
@@ -96,6 +100,7 @@ class PoleEmploi : public Website
   void extract_company (GumboNode * node, unsigned num_offer);
   void extract_description (GumboNode * node, unsigned num_offer);
   void extract_date (GumboNode * node, unsigned num_offer);
+  int extract_day(string date);
   void extract_pages (GumboNode * node);
 
  private:

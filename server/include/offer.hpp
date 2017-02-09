@@ -16,7 +16,7 @@ class Offer
   void set_company (string company);
   void set_description (string description);
   void set_url (string url);
-  void set_date (string date);
+  void set_date (int day);
   void add_type (string type);
 
   string get_title (void);
@@ -24,7 +24,7 @@ class Offer
   string get_company (void);
   string get_description (void);
   string get_url (void);
-  string get_date (void);
+  int get_date (void);
   string get_type (unsigned pos);
 
   unsigned get_nb_type ();
@@ -37,7 +37,7 @@ class Offer
   string company;
   string description;
   string url;
-  string date;
+  int date;
 };
 
 #endif /* OFFER_H */

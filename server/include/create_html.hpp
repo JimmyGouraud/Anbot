@@ -2,6 +2,7 @@
 #define CREATE_HTML_HPP
 
 #include "website.hpp"
+#include <sstream>
 
 string indent (int nb_indent);
 void generate_html (std::vector<Website *> * tab_website);

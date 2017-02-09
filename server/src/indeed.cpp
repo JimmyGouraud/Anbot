@@ -16,8 +16,7 @@ Indeed::Indeed (Research * research)
   url.append("&radius=");
   url.append(research->get_distance());
 
-  if (!research->get_no_wanted().empty())
-  {
+  if (!research->get_no_wanted().empty()) {
     url.append("&as_not=");
     url.append(research->get_no_wanted());
   }
@@ -107,6 +106,8 @@ void Indeed::extract_company (GumboNode *node, unsigned num_offer)
           }
         }
         tab_offer[num_offer]->set_company(text);
+      } else {
+	tab_offer[num_offer]->set_company("?");
       }
             
       GumboVector * children = &node->v.element.children;
@@ -224,6 +225,24 @@ void Indeed::extract_type (GumboNode * node, unsigned num_offer)
 }
 
 
+int Indeed::extract_day(string date)
+{
+  string tmp = "il y a ";
+  std::size_t pos;
+  if (strstr(date.c_str(), "heure") != NULL) {
+    date = date.substr(tmp.size(), 2);
+  } else if (strstr(date.c_str(), "jour") != NULL) {
+    pos = date.find_first_of(" jour");
+    date = date.substr(tmp.size(), 2);
+  } else {
+    cerr << " FAIL CONVERT DATE : " << date << endl;
+  }
+  if (date.at(1) == ' ') {
+    date.erase(1);
+  }
+  
+  return atoi(date.c_str());
+}
 
 void Indeed::extract_date (GumboNode *node, unsigned num_offer)
 {
@@ -251,7 +270,7 @@ void Indeed::extract_date (GumboNode *node, unsigned num_offer)
         date.append(child->v.text.text);
       }
 
-      tab_offer[num_offer]->set_date(date);
+      tab_offer[num_offer]->set_date(extract_day(date));
     }
   }
 }

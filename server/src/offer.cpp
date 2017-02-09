@@ -33,7 +33,7 @@ void Offer::set_url (string url)
   this->url = url;
 }
 
-void Offer::set_date (string date)
+void Offer::set_date (int date)
 {
   this->date = date;
 }
@@ -70,7 +70,7 @@ string Offer::get_url (void)
   return this->url;
 }
 
-string Offer::get_date (void)
+int Offer::get_date (void)
 {
   return this->date;
 }
@@ -90,19 +90,19 @@ unsigned Offer::get_nb_type (void)
 
 void Offer::display(void)
 {
-  cout << " Title       -> " << this->title << endl;
-  cout << " Type        -> ";
-  for (unsigned i = 0; i < this->types.size(); i++)
-  {
-    cout << this->types[i];
-    if (i != this->types.size() - 1)
-    {
-      cout << " ; ";
+  string types;
+  for (unsigned i = 0; i < this->types.size(); ++i) {
+    types.append(this->types[i]);
+    if (i != this->types.size() - 1) {
+      types.append(" ; ");
     }
   }
-  cout << endl;
-  cout << " Location    -> " << this->location << endl;
-  cout << " Company     -> " << this->company << endl;
-  cout << " Description -> " << this->description << endl;
-  cout << " URL         -> " << this->url << endl;
+  
+  cerr << " Title       -> " << this->title << endl
+       << " Type        -> " << types << endl
+       << " Location    -> " << this->location << endl
+       << " Company     -> " << this->company << endl
+       << " Description -> " << this->description << endl
+       << " date        -> " << this->date << endl
+       << " URL         -> " << this->url << endl;
 }

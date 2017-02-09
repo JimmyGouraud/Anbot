@@ -6,8 +6,8 @@ Creation Date : 16 december, 2016
 
 
 ## TO DO LIST 
- - WebServer
- - WebSocket
+ - add type job "Saisonnier"
+ 
 
 ## TO DO LIST SECONDARY 
  - Replace inputs HTML with toggles.

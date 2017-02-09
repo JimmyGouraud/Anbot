@@ -1,8 +1,8 @@
 #include "website.hpp"
-#include <stdlib.h>
+#include <time.h>
 
 /* =============================================
-   ==  Part Pole-Emploi - extraction of data  ==
+   ==  Part Pole-Emploi - Extraction of data  ==
    ============================================= */
 
 static size_t poleEmploi_curl_callback (void *data, size_t size, size_t nmemb, void *pointer)
@@ -21,6 +21,8 @@ PoleEmploi::PoleEmploi (Research * research)
   url.append(research->get_distance());
   url.append("__P__________INDIFFERENT_______________________");
   tab_url.push_back(url);
+
+  ofstream file2("cookie.txt", ios::trunc);
 }
 
 
@@ -44,18 +46,17 @@ void PoleEmploi::extract_offers (GumboNode * node)
     {
       unsigned num_offer = add_offer();
       extract_informations(node->parent->parent, num_offer);
-      if (strstr(tab_offer[num_offer]->get_type(0).c_str(), "Reprise entreprise") != NULL)
-      {
+      if (strstr(tab_offer[num_offer]->get_type(0).c_str(), "Reprise entreprise") != NULL) {
         tab_offer.pop_back();
       }
     }
   }
 }
 
+
 void PoleEmploi::extract_informations (GumboNode * node, unsigned num_offer)
 {
-  if (node->type != GUMBO_NODE_ELEMENT)
-  {
+  if (node->type != GUMBO_NODE_ELEMENT) {
     return;
   }
 
@@ -67,8 +68,7 @@ void PoleEmploi::extract_informations (GumboNode * node, unsigned num_offer)
   extract_date(node, num_offer);
 
   GumboVector * children = &node->v.element.children;
-  for (unsigned i = 0; i < children->length; i++)
-  {
+  for (unsigned i = 0; i < children->length; i++) {
     extract_informations(static_cast<GumboNode*>(children->data[i]), num_offer);
   }
 }
@@ -85,21 +85,17 @@ void PoleEmploi::extract_title_and_url (GumboNode * node, unsigned num_offer)
     {
       GumboNode * child = static_cast<GumboNode*>(node->v.element.children.data[0]);
           
-      if (child != NULL && child->v.text.text != NULL )
-      {
+      if (child != NULL && child->v.text.text != NULL ) {
         string text = child->v.text.text;
-        for (unsigned i = 0; i < text.length(); i++)
-        {
-          if (text[i] == '\n')
-          {
+        for (unsigned i = 0; i < text.length(); i++) {
+          if (text[i] == '\n') {
             text.erase(i, 1); // erase 1 character at pos i.
           }
         }
         tab_offer[num_offer]->set_title(text);
       }
       
-      if ((attributes = gumbo_get_attribute(&node->v.element.attributes, "href")))
-      {
+      if ((attributes = gumbo_get_attribute(&node->v.element.attributes, "href"))) {
         string url = "http://" + this->website + attributes->value;
         tab_offer[num_offer]->set_url(url);
       }
@@ -121,20 +117,18 @@ void PoleEmploi::extract_company (GumboNode * node, unsigned num_offer)
     if (strstr(attributes1->value, "name") != NULL &&
         strstr(attributes2->value, "hiringOrganization") != NULL)
     {
-      
       GumboNode * child = static_cast<GumboNode*>(node->v.element.children.data[0]);
       
-      if (child != NULL && child->v.text.text != NULL)
-      {
+      if (child != NULL && child->v.text.text != NULL) {
         string company = child->v.text.text;
-        for (unsigned i = 0; i < company.length(); i++)
-        {
-          if (company[i] == '\n')
-          {
+        for (unsigned i = 0; i < company.length(); i++) {
+          if (company[i] == '\n') {
             company.erase(i, 1); // erase 1 character at pos i.
           }
         }
         tab_offer[num_offer]->set_company(company);
+      } else {
+	tab_offer[num_offer]->set_company("?");
       }
     }
   }
@@ -156,13 +150,10 @@ void PoleEmploi::extract_location (GumboNode * node, unsigned num_offer)
     {
       GumboNode * child = static_cast<GumboNode*>(node->v.element.children.data[0]);
           
-      if (child != NULL && child->v.text.text != NULL )
-      {
+      if (child != NULL && child->v.text.text != NULL ) {
         string location = child->v.text.text;
-        for (unsigned i = 0; i < location.length(); i++)
-        {
-          if (location[i] == '\n')
-          {
+        for (unsigned i = 0; i < location.length(); i++) {
+          if (location[i] == '\n') {
             location.erase(i, 1); // erase 1 character at pos i.
           }
         }
@@ -179,18 +170,14 @@ void PoleEmploi::extract_description (GumboNode * node, unsigned num_offer)
   
   if (node->v.element.tag == GUMBO_TAG_P &&
       (attributes = gumbo_get_attribute(&node->v.element.attributes, "class")))
-  {  
-    if (strstr(attributes->value, "description") != NULL)
-    {
+  {
+    if (strstr(attributes->value, "description") != NULL) {
       GumboNode * child = static_cast<GumboNode*>(node->v.element.children.data[0]);
-          
-      if (child != NULL && child->v.text.text != NULL )
-      {
+      
+      if (child != NULL && child->v.text.text != NULL ) {
         string description = child->v.text.text;
-        for (unsigned i = 0; i < description.length(); i++)
-        {
-          if (description[i] == '\n')
-          {
+        for (unsigned i = 0; i < description.length(); i++) {
+          if (description[i] == '\n') {
             description.erase(i, 1); // erase 1 character at pos i.
           }
         }
@@ -213,24 +200,19 @@ string PoleEmploi::create_cookie ()
   string cookie = "xtvrn=$475540$; xtan475540=-; xtant475540=1";
   string line;
   int num_line = 0;
-  while (getline(file, line))
-  {
+  while (getline(file, line)) {
     string tmp;
-    if (num_line > 3)
-    {
+    if (num_line > 3) {
       unsigned cpt = 0;
       for (unsigned i = 0; i < line.length(); i++){
-        if (line[i] == '\t')
-        {
+        if (line[i] == '\t') {
           cpt++;
-          if (cpt > 5)
-          {
+          if (cpt > 5) {
             tmp.push_back('=');
           }
           continue;
         }
-        if (cpt > 4)
-        {
+        if (cpt > 4) {
           tmp.push_back(line[i]);
         }
       }
@@ -253,32 +235,29 @@ void PoleEmploi::run ()
   unsigned initial_size = tab_url.size();
   bool research_others_pages = true;
   
-  for (unsigned i = 0; i < tab_url.size(); i++)
-    {
-      if (i > initial_size)
-	{
-	  research_others_pages = false;
-	}
-
-      this->current_url = tab_url[i];
-    
-      cout << "\033[32m - " << this->current_url << "\033[00m" << endl;
-
-      if (initialize_curl(this->current_url.c_str()) == 0)
-	{
-	  if (i == 0)
-	    {
-	      exec_command_bash();
-	      continue;
-	    }
-   
-	  output = gumbo_parse(data.c_str());
-	  extract_data(output->root, research_others_pages);
-	  gumbo_destroy_output(&kGumboDefaultOptions, output);
-	}
-    
-      data.clear();
+  for (unsigned i = 0; i < tab_url.size(); i++) {
+    if (i > initial_size) {
+      research_others_pages = false;
     }
+    
+    this->current_url = tab_url[i];
+    
+    cout << "\033[32m - " << this->current_url << "\033[00m" << endl;
+    
+    if (initialize_curl(this->current_url.c_str()) == 0) {
+      if (i == 0) {
+	exec_command_bash();
+	data.clear();
+	continue;
+      }
+      
+      output = gumbo_parse(data.c_str());
+      extract_data(output->root, research_others_pages);
+      gumbo_destroy_output(&kGumboDefaultOptions, output);
+    }
+    
+    data.clear();
+  }
 }
 
 
@@ -338,27 +317,49 @@ void PoleEmploi::extract_type (GumboNode * node, unsigned num_offer)
       node->parent->v.element.tag == GUMBO_TAG_TR &&
       (attributes1 = gumbo_get_attribute(&node->v.element.attributes, "itemprop")) &&
       (attributes2 = gumbo_get_attribute(&node->parent->v.element.attributes, "itemtype")))
-    {  
-      if (strstr(attributes1->value, "employmentType") != NULL &&
-	  strstr(attributes2->value, "http://schema.org/JobPosting") != NULL)
-	{
-	  GumboNode * child = static_cast<GumboNode*>(node->v.element.children.data[0]);
+  {  
+    if (strstr(attributes1->value, "employmentType") != NULL &&
+	strstr(attributes2->value, "http://schema.org/JobPosting") != NULL)
+    {
+      GumboNode * child = static_cast<GumboNode*>(node->v.element.children.data[0]);
           
-	  if (child != NULL && child->v.text.text != NULL )
-	    {
-	      string type = child->v.text.text;
-	      for (unsigned i = 0; i < type.length(); i++)
-		{
-		  if (type[i] == '\n')
-		    {
-		      type.erase(i, 1); // erase 1 character at pos i.
-		    }
-		}
-	      tab_offer[num_offer]->add_type(convert_type(type));
-	    }
+      if (child != NULL && child->v.text.text != NULL) {
+	string type = child->v.text.text;
+	for (unsigned i = 0; i < type.length(); i++) {
+	  if (type[i] == '\n') {
+	    type.erase(i, 1); // erase 1 character at pos i.
+	  }
 	}
+	tab_offer[num_offer]->add_type(convert_type(type));
+      }
     }
+  }
 }
+
+
+int PoleEmploi::extract_day(string date)
+{
+  time_t now = time(NULL); /* get current time; */
+  struct tm time_date = {0};
+  
+  std::size_t pos1 = 0;
+  std::size_t pos2 = date.find_first_of("/");
+  time_date.tm_mday = atoi(date.substr(pos1, pos2 - pos1).c_str());
+
+  pos1 = pos2 + 1;
+  pos2 = date.find_first_of("/", pos1);
+  // Month is between 0 and 11 
+  time_date.tm_mon = atoi(date.substr(pos1, pos2 - pos1).c_str()) - 1;
+
+  pos1 = pos2 + 1;
+  pos2 = date.find_first_of("/", pos1);
+  time_date.tm_year = atoi(date.substr(pos1, pos2 - pos1).c_str()) - 1900;
+    
+  int days = difftime(now, mktime(&time_date)) / 86400; // 86 400 = 60 * 60 * 24
+
+  return days > 29? 30 : days;
+}
+
 
 void PoleEmploi::extract_date (GumboNode * node, unsigned num_offer)
 {
@@ -368,63 +369,61 @@ void PoleEmploi::extract_date (GumboNode * node, unsigned num_offer)
   if (node->v.element.tag == GUMBO_TAG_TD &&
       (attributes1 = gumbo_get_attribute(&node->v.element.attributes, "itemprop")) &&
       (attributes2 = gumbo_get_attribute(&node->v.element.attributes, "headers")))
+  {
+    if (strstr(attributes1->value, "datePosted") != NULL &&
+	strstr(attributes2->value, "dateEmission") != NULL)
     {
-      if (strstr(attributes1->value, "datePosted") != NULL &&
-	  strstr(attributes2->value, "dateEmission") != NULL)
-	{
-	  GumboVector * children = &node->v.element.children;
-	  string date;
+      GumboVector * children = &node->v.element.children;
+      string date;
 
-	  for (unsigned i = 0; i < children->length; i++)
-	    {
-	      GumboNode * child = static_cast<GumboNode*>(node->v.element.children.data[i]);
-	      if (child->type == GUMBO_NODE_ELEMENT)
-		{
-		  child = static_cast<GumboNode*>(child->v.element.children.data[0]);
-		}
-	      date.append(child->v.text.text);
-	    }
-
-	  tab_offer[num_offer]->set_date(date);
+      for (unsigned i = 0; i < children->length; i++) {
+	GumboNode * child = static_cast<GumboNode*>(node->v.element.children.data[i]);
+	if (child->type == GUMBO_NODE_ELEMENT) {
+	  child = static_cast<GumboNode*>(child->v.element.children.data[0]);
 	}
+	date.append(child->v.text.text);
+      }
+	  
+      tab_offer[num_offer]->set_date(extract_day(date));
     }
+  }
 }
 
 string PoleEmploi::convert_type (string type)
 {
-  if (strstr(type.c_str(), "CDI") != NULL) 
-  {
+  if (strstr(type.c_str(), "CDI") != NULL) {
     return "permanent";
   }
-  if (strstr(type.c_str(), "CDD") != NULL) 
-  {
+
+  if (strstr(type.c_str(), "CDD") != NULL) {
     return "contract";
   }
-  if (strstr(type.c_str(), "Temps Plein") != NULL) 
-  {
+
+  if (strstr(type.c_str(), "Temps Plein") != NULL) {
     return "fulltime";
   }
-  if (strstr(type.c_str(), "Temps Partiel") != NULL) 
-  {
+
+  if (strstr(type.c_str(), "Temps Partiel") != NULL) {
     return "parttime";
   }
-  if (strstr(type.c_str(), "Intérim") != NULL)
-  {
+
+  if (strstr(type.c_str(), "Intérim") != NULL) {
     return "temporary";
   }
-  if (strstr(type.c_str(), "Freelance") != NULL)
-  {
+
+  if (strstr(type.c_str(), "Freelance") != NULL) {
     return "subcontract";
   }
+
   if (strstr(type.c_str(), "Contrat D´alternance") != NULL ||
-      strstr(type.c_str(), "Contrat D´apprentissage") != NULL)
-  {
+      strstr(type.c_str(), "Contrat D´apprentissage") != NULL) {
     return "apprenticeship";
   }
-  if (strstr(type.c_str(), "Stage") != NULL)
-  {
+
+  if (strstr(type.c_str(), "Stage") != NULL) {
     return "internship";
   }
+  
   return type;
 }
 

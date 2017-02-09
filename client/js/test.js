@@ -1,4 +1,24 @@
 
+
+function init()
+{
+    $.ajax({
+	url: 'bouh.txt',
+	success: function (data, textStatus, jqXHR)
+	{
+	    //alert("success : " + textStatus + " " + data);
+	},
+	error: function (error)
+	{
+	    //alert("Errors : " + error);
+	    console.log("Errors : " + error);
+	}
+    });
+}
+
+window.addEventListener("load", init, false);
+
+/*
 var adressServer = "ws://jimmy.gouraud.emi.u-bordeaux.fr/";
 
 var output;
@@ -53,6 +73,4 @@ function writeToScreen(message)
     pre.innerHTML = message;
     output.appendChild(pre);
 }
-
-window.addEventListener("load", init, false);
-
+*/
