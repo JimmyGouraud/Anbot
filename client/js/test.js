@@ -2,11 +2,12 @@
 
 function init()
 {
+    $.support.cors = true;
     $.ajax({
-	url: 'bouh.txt',
+	url: 'localhost:8080/bouh.txt',
 	success: function (data, textStatus, jqXHR)
 	{
-	    //alert("success : " + textStatus + " " + data);
+	    alert("success : " + textStatus + " " + data);
 	},
 	error: function (error)
 	{

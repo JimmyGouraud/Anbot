@@ -1,5 +1,5 @@
 #include "website.hpp"
-
+#include <algorithm>
 using namespace std;
 
 
@@ -12,10 +12,10 @@ static size_t curl_callback (void *data, size_t size, size_t nmemb, void *pointe
 Website::~Website()
 {
   tab_url.clear();
-  for (unsigned i = 0; i < tab_offer.size(); i++)
-  {
+  for (unsigned i = 0; i < tab_offer.size(); ++i) {
     delete tab_offer[i];
   }
+  remove("cookie.txt");
 }
 
 string Website::get_website()
@@ -42,8 +42,7 @@ unsigned Website::add_offer ()
 
 void Website::display_offers()
 {
-  for (unsigned i = 0 ; i < tab_offer.size(); i++)
-  {  
+  for (unsigned i = 0 ; i < tab_offer.size(); ++i) {  
     cout << "Offer N°" << i+1 << endl;
     tab_offer[i]->display();
   }
@@ -87,19 +86,16 @@ void Website::run ()
   unsigned initial_size = tab_url.size();
   bool research_others_pages = true;
   
-  for (unsigned i = 0; i < tab_url.size(); i++)
-  {
-    if (i > initial_size)
-      {
-	research_others_pages = false;
-      }
+  for (unsigned i = 0; i < tab_url.size(); ++i) {
+    if (i > initial_size) {
+      research_others_pages = false;
+    }
 
     this->current_url = tab_url[i];
     
     cout << "\033[32m - " << this->current_url << "\033[00m" << endl;
 
-    if (initialize_curl(this->current_url.c_str()) == 0)
-    {      
+    if (initialize_curl(this->current_url.c_str()) == 0) {      
       output = gumbo_parse(data.c_str());
       extract_data(output->root, research_others_pages);
       gumbo_destroy_output(&kGumboDefaultOptions, output);
@@ -107,24 +103,23 @@ void Website::run ()
     
     data.clear();
   }
+  
+  sort_tab_offer();
 }
 
 void Website::extract_data (GumboNode * node, bool research_others_pages)
 {
-  if (node->type != GUMBO_NODE_ELEMENT)
-  {
+  if (node->type != GUMBO_NODE_ELEMENT) {
     return;
   }
 
   extract_offers(node);
-  if (research_others_pages)
-    {
-      extract_pages(node);
-    }
+  if (research_others_pages) {
+    extract_pages(node);
+  }
   
   GumboVector * children = &node->v.element.children;
-  for (unsigned i = 0; i < children->length; i++)
-  {
+  for (unsigned i = 0; i < children->length; ++i) {
     extract_data(static_cast<GumboNode*>(children->data[i]), research_others_pages);
   }
 }
@@ -134,11 +129,21 @@ void Website::extract_data (GumboNode * node, bool research_others_pages)
 
 int Website::find_offer(string url)
 {
-  for (unsigned i = 0; i < tab_offer.size(); i++)
-  {
-    if (strstr(tab_offer[i]->get_url().c_str(), url.c_str()) != NULL){
+  for (unsigned i = 0; i < tab_offer.size(); ++i) {
+    if (strstr(tab_offer[i]->get_url().c_str(), url.c_str()) != NULL) {
       return i;
     }
   }
+  
   return -1;
+}
+
+bool sort_offers (Offer* i, Offer* j)
+{
+  return (i->get_date() < j->get_date());
+}
+
+void Website::sort_tab_offer(void)
+{
+  std::sort (tab_offer.begin(), tab_offer.end(), sort_offers);
 }

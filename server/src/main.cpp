@@ -30,7 +30,6 @@ int main (int argc, char *argv[])
     tab_website[i]->run();
   }
   
-  ofstream file("offers.php", ios::trunc);
   generate_html(&tab_website);
 
   for (unsigned i = 0; i < tab_website.size(); i++) {

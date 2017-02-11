@@ -28,7 +28,8 @@ class Website
   unsigned add_offer();
   void display_offers ();
   int find_offer(string url);
-
+  void sort_tab_offer();
+  
   virtual void run();
   virtual int initialize_curl (const char* url);
   virtual void extract_data (GumboNode * node, bool research_others_pages);

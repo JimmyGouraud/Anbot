@@ -1,9 +1,19 @@
 $(document).ready(function(){
     var checkboxes = $("#employmentType [name=\"employmentType\"]");
     
-    for (var i = 0; i < checkboxes.length; i++)
-    {
+    for (var i = 0; i < checkboxes.length; i++) {
 	checkboxes[i].checked = true;
+    }
+
+    checkboxes = $("#employmentType [name=\"employmentSort\"]");
+    checkboxes[0].checked = true;
+    for (var i = 0; i < checkboxes.length; i++) {
+	var value = $("." + checkboxes[i].value);
+	if (checkboxes[i].checked) {
+	    $(value).show();
+	} else {
+	    $(value).hide();
+	}
     }
 });
 
@@ -59,5 +69,15 @@ function update_display()
     }
     
     checkboxes[0].checked = all_check;
+
+    checkboxes = $("#employmentType [name=\"employmentSort\"]");
+    for (var i = 0; i < checkboxes.length; i++) {
+	var value = $("." + checkboxes[i].value);
+	if (checkboxes[i].checked) {
+	    $(value).show();
+	} else {
+	    $(value).hide();
+	}
+    }
 }
 

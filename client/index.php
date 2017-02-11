@@ -67,6 +67,14 @@
 		  </div>
 		</div>
 	      </div>
+	      <div class="col-md-6">
+		<div class="row">
+		  <div class="text-center col-md-12 col-sm-12">
+		    <input type="radio" name="employmentSort" value="sortWebsite" onclick="update_display()"> Trier par siteweb<br>
+		    <input type="radio" name="employmentSort" value="sortDate" onclick="update_display()"> Trier par date<br>
+		  </div>
+		</div>
+	      </div>
 	    </div>
 	  </form> 
 	</div>
@@ -75,9 +83,14 @@
     <!--/ Panel -->
 
     <!-- Offers-->
-    <?php include("../server/offers.php"); ?>
+    <div class="sortWebsite">
+      <?php include("../server/build/offers_by_website.php"); ?>
+    </div>
+    <div class="sortDate">
+      <?php include("../server/build/offers_by_date.php"); ?>
+    </div>
     <!--/ Offers-->
-
+    ²²
     <!--Footer-->
     <footer id="footer" class="footer">
       <div class="container text-center">

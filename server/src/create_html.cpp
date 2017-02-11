@@ -5,7 +5,7 @@ using namespace std;
 string indent(int nb_indent)
 {
   string indentation;
-  for (unsigned i = 0; i < (unsigned)nb_indent; i++) {
+  for (unsigned i = 0; i < (unsigned)nb_indent; ++i) {
     indentation += "  ";
   }
   
@@ -15,36 +15,184 @@ string indent(int nb_indent)
 
 void generate_html (std::vector<Website *> * tab_website)
 {
-  ofstream file("offers.php", ios::app);
+  std::ostringstream* oss_website = new ostringstream();
+  html_by_website(tab_website, oss_website);
+  ofstream file_website("offers_by_website.php", ios::trunc);
+  file_website << oss_website->str();
+  delete oss_website;
+
+  std::ostringstream* oss_date = new ostringstream();
+  html_by_date(tab_website, oss_date);
+  ofstream file_date("offers_by_date.php", ios::trunc);
+  file_date << oss_date->str();
+  delete oss_date;
+}
+
+bool sort_offers2 (Offer* i, Offer* j)
+{
+  return (i->get_date() < j->get_date());
+}
+
+void sort_tab_offer(std::vector<Offer *>* tab_offer)
+{
+  std::sort (tab_offer->begin(), tab_offer->end(), sort_offers2);
+}
+
+void html_by_date(std::vector<Website *> * tab_website, std::ostringstream* oss)
+{
+  std::vector<Offer *> * tab_all_offers = new std::vector<Offer *>;
+  Website* website;
+  for (unsigned i = 0; i < tab_website->size(); ++i) {
+    website = (* tab_website)[i];
+    for (unsigned j = 0; j < website->get_nb_offers(); ++j) {
+      tab_all_offers->push_back(website->get_offer(j));
+    }
+  }
+
+  sort_tab_offer(tab_all_offers);
+
+  bool a = true, b = false;
+  Offer* offer;
+  for (unsigned i = 0; i < tab_all_offers->size(); ++i) {
+    offer = (* tab_all_offers)[i];
+    if (offer->get_date() < 5) {
+      if (a){
+	*oss << indent(2) << "<section class=\"section-padding odd\">" << endl
+	     << indent(3) << "<div class=\"container\">" << endl
+	     << indent(4) << "<div class=\"row\">" << endl
+	     << indent(5) << "<div class=\"header-section text-center\">" << endl
+	     << indent(6) << "<h4>Offres datant de 0 à 4 jours</h4>" << endl
+	     << indent(6) << "<hr class=\"bottom-line\">" << endl
+	     << indent(5) << "</div>" << endl;
+	a = false;
+	b = true;
+      }
+    } else if (offer->get_date() < 10) {
+      if (b){
+	*oss << indent(4) << "</div>" << endl
+	     << indent(3) << "</div>" << endl
+	     << indent(2) << "</section>" << endl
+	     << indent(2) << "<section class=\"section-padding even\">" << endl
+	     << indent(3) << "<div class=\"container\">" << endl
+	     << indent(4) << "<div class=\"row\">" << endl
+	     << indent(5) << "<div class=\"header-section text-center\">" << endl
+	     << indent(6) << "<h4>Offres datant de 5 à 9 jours</h4>" << endl
+	     << indent(6) << "<hr class=\"bottom-line\">" << endl
+	     << indent(5) << "</div>" << endl;
+	b = false;
+	a = true;
+      }
+    } else if (offer->get_date() < 15) {
+      if (a){
+	*oss << indent(4) << "</div>" << endl
+	     << indent(3) << "</div>" << endl
+	     << indent(2) << "</section>" << endl
+	     << indent(2) << "<section class=\"section-padding odd\">" << endl
+	     << indent(3) << "<div class=\"container\">" << endl
+	     << indent(4) << "<div class=\"row\">" << endl
+	     << indent(5) << "<div class=\"header-section text-center\">" << endl
+	     << indent(6) << "<h4>Offres datant de 10 à 14 jours</h4>" << endl
+	     << indent(6) << "<hr class=\"bottom-line\">" << endl
+	     << indent(5) << "</div>" << endl;
+	a = false;
+	b = true;
+      }
+    } else if (offer->get_date() < 20) {
+      if (b){
+	*oss << indent(4) << "</div>" << endl
+	     << indent(3) << "</div>" << endl
+	     << indent(2) << "</section>" << endl
+	     << indent(2) << "<section class=\"section-padding even\">" << endl
+	     << indent(3) << "<div class=\"container\">" << endl
+	     << indent(4) << "<div class=\"row\">" << endl
+	     << indent(5) << "<div class=\"header-section text-center\">" << endl
+	     << indent(6) << "<h4>Offres datant de 15 à 19 jours</h4>" << endl
+	     << indent(6) << "<hr class=\"bottom-line\">" << endl
+	     << indent(5) << "</div>" << endl;
+	b = false;
+	a = true;
+      }
+    } else if (offer->get_date() < 25) {
+      if (a){
+	*oss << indent(4) << "</div>" << endl
+	     << indent(3) << "</div>" << endl
+	     << indent(2) << "</section>" << endl
+	     << indent(2) << "<section class=\"section-padding odd\">" << endl
+	     << indent(3) << "<div class=\"container\">" << endl
+	     << indent(4) << "<div class=\"row\">" << endl
+	     << indent(5) << "<div class=\"header-section text-center\">" << endl
+	     << indent(6) << "<h4>Offres datant de 20 à 24 jours</h4>" << endl
+	     << indent(6) << "<hr class=\"bottom-line\">" << endl
+	     << indent(5) << "</div>" << endl;
+	a = false;
+	b = true;
+      }
+    } else if (offer->get_date() < 30) {
+      if (b){
+	*oss << indent(4) << "</div>" << endl
+	     << indent(3) << "</div>" << endl
+	     << indent(2) << "</section>" << endl
+	     << indent(2) << "<section class=\"section-padding even\">" << endl
+	     << indent(3) << "<div class=\"container\">" << endl
+	     << indent(4) << "<div class=\"row\">" << endl
+	     << indent(5) << "<div class=\"header-section text-center\">" << endl
+      	     << indent(6) << "<h4>Offres datant de 25 à 29 jours</h4>" << endl
+	     << indent(6) << "<hr class=\"bottom-line\">" << endl
+	     << indent(5) << "</div>" << endl;
+	b = false;
+	a = true;
+      }
+    }else {
+      if (a){
+	*oss << indent(4) << "</div>" << endl
+	     << indent(3) << "</div>" << endl
+	     << indent(2) << "</section>" << endl
+	     << indent(2) << "<section class=\"section-padding odd\">" << endl
+	     << indent(3) << "<div class=\"container\">" << endl
+	     << indent(4) << "<div class=\"row\">" << endl
+	     << indent(5) << "<div class=\"header-section text-center\">" << endl
+	     << indent(6) << "<h4>Offres datant de 30 jours ou plus</h4>" << endl
+	     << indent(6) << "<hr class=\"bottom-line\">" << endl
+	     << indent(5) << "</div>" << endl;
+	a = false;
+      }
+    }
+    html_offer(offer, i+1, oss);
+  }
+  *oss << indent(4) << "</div>" << endl
+       << indent(3) << "</div>" << endl
+       << indent(2) << "</section>" << endl;
+}
+
+
+void html_by_website(std::vector<Website *> * tab_website, std::ostringstream* oss)
+{
   string parity;
-  
-  for (unsigned i = 0; i < tab_website->size(); i++) {
+  for (unsigned i = 0; i < tab_website->size(); ++i) {
     parity = (i%2 == 0? "odd" : "even");
     
-    file << indent(2) << "<section class=\"section-padding " << parity << "\">" << endl
+    *oss << indent(2) << "<section class=\"section-padding " << parity << "\">" << endl
 	 << indent(3) << "<div class=\"container\">" << endl
 	 << indent(4) << "<div class=\"row\">" << endl;
 
-    generate_html_website((* tab_website)[i]);
+    html_website((* tab_website)[i], oss);
 
-    file << indent(4) << "</div>" << endl
+    *oss << indent(4) << "</div>" << endl
 	 << indent(3) << "</div>" << endl
 	 << indent(2) << "</section>" << endl;
   }
 }
 
 
-void generate_html_website (Website * website)
+void html_website (Website * website, std::ostringstream* oss)
 {
-  ofstream file("offers.php", ios::app);
+  html_title(website->get_website(), website->get_nb_offers(), oss);
 
-  generate_html_title(website->get_website(), website->get_nb_offers());
-
-  file << indent(5) << "<div class=\"row feature-info\">" << endl;
-  for (unsigned i = 0; i < website->get_nb_offers(); i++) {
-    generate_html_offer(website->get_offer(i), i+1);
+  *oss << indent(5) << "<div class=\"row feature-info\">" << endl;
+  for (unsigned i = 0; i < website->get_nb_offers(); ++i) {
+    html_offer(website->get_offer(i), i+1, oss);
   }
-  file << indent(5) << "</div>" << endl;
+  *oss << indent(5) << "</div>" << endl;
 }
 
 string get_src_img(string title)
@@ -61,22 +209,20 @@ string get_src_img(string title)
   return "";
 }
 
-void generate_html_title (string title, unsigned nb_offers)
+void html_title (string title, unsigned nb_offers, std::ostringstream* oss)
 {
-  ofstream file("offers.php", ios::app);
-
-  file << indent(5) << "<div class=\"header-section text-center\">" << endl
-       << indent(6) << "<img src=\"img/" << get_src_img(title) << "\"> " << endl
-       << indent(6) << "<h4>Pâtissier - Saint-André-de-Cubzac - 50km</h4>" << endl
-       << indent(6) << "<h4>(nombre d'offres trouvées : " << nb_offers  << ")</h4>" << endl
-       << indent(6) << "<hr class=\"bottom-line\">" << endl
-       << indent(5) << "</div>" << endl;
+  *oss << indent(5) << "<div class=\"header-section text-center\">" << endl
+      << indent(6) << "<img src=\"img/" << get_src_img(title) << "\"> " << endl
+      << indent(6) << "<h4>Pâtissier - Saint-André-de-Cubzac - 50km</h4>" << endl
+      << indent(6) << "<h4>(nombre d'offres trouvées : " << nb_offers  << ")</h4>" << endl
+      << indent(6) << "<hr class=\"bottom-line\">" << endl
+      << indent(5) << "</div>" << endl;
 }
 
 string display_class_types (Offer * offer)
 {
   string types;
-  for (unsigned i = 0; i < offer->get_nb_type(); i++) {
+  for (unsigned i = 0; i < offer->get_nb_type(); ++i) {
     types.append(offer->get_type(i));
     if (i != offer->get_nb_type() - 1) {
       types.push_back(' ');
@@ -118,7 +264,7 @@ string convert_type (string type)
 string display_types (Offer * offer)
 {
   string types;
-  for (unsigned i = 0; i < offer->get_nb_type(); i++)
+  for (unsigned i = 0; i < offer->get_nb_type(); ++i)
   {
     types.append(convert_type(offer->get_type(i)));
     if (i != (offer->get_nb_type() - 1))
@@ -129,74 +275,72 @@ string display_types (Offer * offer)
   return types;
 }
 
-void generate_html_informations (Offer * offer)
+void html_informations (Offer * offer, std::ostringstream* oss)
 {
-  ofstream file("offers.php", ios::app);
-
   // Title
-  file << indent(10) << "<h4>" << offer->get_title() << "</h4> "<< endl;
-
+  *oss << indent(10) << "<h4>" << offer->get_title() << "</h4> "<< endl
+ 
   // Company & Location
-  file << indent(10) << "<div>" << endl
-       << indent(11) << "<span class=\"offer_company\">" << offer->get_company() << "</span>" << endl
-       << indent(11) << " - " << endl
-       << indent(11) << "<span class=\"offer_location\">" << offer->get_location() << "</span>" << endl
-       << indent(10) << "</div>" << endl;
+      << indent(10) << "<div>" << endl
+      << indent(11) << "<span class=\"offer_company\">" << offer->get_company() << "</span>" << endl
+      << indent(11) << " - " << endl
+      << indent(11) << "<span class=\"offer_location\">" << offer->get_location() << "</span>" << endl
+      << indent(10) << "</div>" << endl
 
   // Types
-  file << indent(10) << "<div>" << endl
-       << indent(11) << "<span class=\"offer_type\">" << display_types(offer) << "</span>" << endl
-       << indent(10) << "</div>" << endl;
+      << indent(10) << "<div>" << endl
+      << indent(11) << "<span class=\"offer_type\">" << display_types(offer) << "</span>" << endl
+      << indent(10) << "</div>" << endl
 
   // Description
-  file << indent(10) << "<div>" << endl
-       << indent(11) << "<span class=\"offer_description\">" << offer->get_description() << "</span>" << endl
-       << indent(10) << "</div>" << endl;
+      << indent(10) << "<div>" << endl
+      << indent(11) << "<span class=\"offer_description\">" << offer->get_description() << "</span>" << endl
+      << indent(10) << "</div>" << endl;
 }
 
-string generate_html_date (Offer * offer)
+
+void html_date (Offer * offer, std::ostringstream* oss)
 {
   int date = offer->get_date();
   
-  ostringstream str_date;
   switch(date)
   {
   case 0:
-    str_date << "Aujourd'hui !";
+    *oss << "Aujourd'hui !";
     break;
   case 1:
-    str_date << "Hier";
+    *oss << "Hier";
     break;
   case 30:
-    str_date << "Il y a plus de 30 jours";
-      break;
+    *oss << "Il y a 30 jours ou plus";
+    break;
   default:
-    str_date << "Il y a " << date << " jours";
+    *oss << "Il y a " << date << " jours";
     break;
   }
-  
-  return str_date.str();
 }
 
 
-void generate_html_offer(Offer* offer, unsigned num_offer)
+void html_offer(Offer* offer, unsigned num_offer, std::ostringstream* oss)
 {
-  ofstream file("offers.php", ios::app);
-
-  file << indent(6) << "<div class=\"" << display_class_types(offer) << "\">" << endl
+  *oss << indent(6) << "<div class=\"" << display_class_types(offer) << "\">" << endl
        << indent(7) << "<div class=\"col-md-4 col-sm-6\">" << endl
        << indent(8) << "<div class=\"text-center\">Offre N°" << endl
-       << indent(9) << num_offer << " - " << generate_html_date(offer) << endl
+       << indent(9) << num_offer << " - ";
+  
+  html_date(offer, oss);
+  
+  *oss << endl
        << indent(8) << "</div>" << endl
        << indent(8) << "<a href=\"" << offer->get_url() << "\">" << endl
        << indent(9) << "<div class=\"box-offer\">" << endl;
 
-  generate_html_informations(offer);
+  html_informations(offer, oss);
   
-  file << indent(9) << "</div>" << endl
+  *oss << indent(9) << "</div>" << endl
        << indent(8) << "</a>" << endl
-       << indent(7) << "</div>" << endl
-       << indent(6) << "</div>" << endl;
+      << indent(7) << "</div>" << endl
+      << indent(6) << "</div>" << endl;
 }
 
 

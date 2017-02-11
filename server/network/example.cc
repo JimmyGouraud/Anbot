@@ -33,22 +33,23 @@ class MyDynamicRepository : public DynamicRepository
       {
 	void *myAttribute = request->getSessionAttribute("username");          
 	return myAttribute != NULL;
-      }*/
+	}*/
   };    
   
   
-  class bouh: public MyDynamicPage
+  class Bouh: public MyDynamicPage
   {
     bool getPage(HttpRequest* request, HttpResponse *response)
-    {
-      return true;
-    }  
+      {
+	return fromString("{\"error\" : You don't have a valid token, retry please\"}", response);
+      }  
   } bouh;
   
   class Controller: public MyDynamicPage
   {
     bool getPage(HttpRequest* request, HttpResponse *response)
       {
+	std::cout << " in ! " << std::endl;
 	response->forwardTo("index.php");
         return true;
       }
@@ -59,7 +60,6 @@ public:
     {
       add("index.html", &controller);
       add("bouh.txt", &bouh);
-
     }
 };
 
